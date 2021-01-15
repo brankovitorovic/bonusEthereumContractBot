@@ -12,11 +12,24 @@
 
 <body>
 
-    <button onclick="getUsers()" >Get users</button>
+    <h2>Get current price of ethereum and price on smart contract</h2>
+    <button onclick="getCurrentPrice()">Get prices</button>
+    
+    <div id="getPrice"></div>
 
-    <button id="connect" onclick="connect()">Connect to queue</button>
+    <div id="connect">
+        
+        <h2>Connect to queue to be able to write on smart contract and to pay gas for transaction</h2>
+        <button id="connectBtn" onclick="connect()">Connect to queue</button>
 
-    <button id="disconnect" onclick="disconnect()">Disconnect</button>
+    </div>
+
+    <div id="disconnect">
+
+        <h2>Disconnect from queue</h2>
+        <button id="disconnectBtn" onclick="disconnect()">Disconnect</button>
+    
+    </div>
 
 </body>
 

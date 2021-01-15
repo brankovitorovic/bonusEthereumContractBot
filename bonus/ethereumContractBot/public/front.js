@@ -1,5 +1,6 @@
 var id = 0;
 var socket = {};
+const baseUrl = 'http://localhost:3000'
 
 styleDisplay('disconnect','none')
 
@@ -30,7 +31,8 @@ function connect(){
 }
 
 function tryToCharge(data){
-  accountAddress = web3.eth.accounts[0] 
+  console.log(web3.eth.accounts)
+  accountAddress = web3.eth.accounts[0]
 
   web3.eth.sendTransaction({
     from: accountAddress,
@@ -52,9 +54,12 @@ function disconnect(){
   styleDisplay('connect','inline')
 }
 
-function getUsers(){
-  axios.get('/getUsers')
-    .then( res => console.log(res))
+function getCurrentPrice(){
+  axios.get(baseUrl + '/get-price')
+    .then( response => {
+      let text = 'Current ethereum price is ' + response.data.currentPrice + ', and price on smart contract is ' + response.data.contractPrice
+      document.getElementById('getPrice').innerHTML = text
+    })
 }
 
 function styleDisplay(id,display){

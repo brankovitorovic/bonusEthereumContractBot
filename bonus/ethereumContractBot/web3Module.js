@@ -1,20 +1,15 @@
-// node js stuff
+// node js
 const Web3 = require('web3')
 const web3 = new Web3('https://kovan.infura.io/v3/2cd65820208443a6a034f10a6ec1d427')
-// account stuff
-const accountAddress = '0x13CD36E22A36cCf3da3b3419DB60A8DB9bD6dB6f'
-const privateKey = 'f195e0a96566c35410cb8a8b7282a7cba3bbce3fac962efce74076719fe46054';
-// contract staff, abi and contractAddress are copied from contract
+
+// contract ( abi and contractAddress are copied from contract )
 const abi = [{"inputs":[{"internalType":"uint256","name":"_ethPrice","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"getLastSetTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_newPrice","type":"uint256"}],"name":"setEthPrice","outputs":[],"stateMutability":"nonpayable","type":"function"}];
 const contractAddress = '0xeB23AB1b43B414e15430aA9a33A7915aA81A2268';
 const contract = new web3.eth.Contract(abi, contractAddress);
-// constants 
+
 const MINUTES_TO_WAIT = 15;
 
-async function getGasNeeded(average){
-    var promiseForGas = contract.methods.setEthPrice( web3.utils.toWei(average+'') ).estimateGas({from: accountAddress})
-    return await promiseForGas
-} 
+// -------------------------------------- transaction --------------------------------------
 
 async function getTransactionDetails(average){
     var gasPrice = await web3.eth.getGasPrice()
@@ -22,6 +17,11 @@ async function getTransactionDetails(average){
     var data = contract.methods.setEthPrice( web3.utils.toWei(average+'') ).encodeABI()
     return {contractAddress: contractAddress, average: data, gasPrice: gasPrice, gasNeeded:gasNeeded}
 }
+
+async function getGasNeeded(average){
+    var promiseForGas = contract.methods.setEthPrice( web3.utils.toWei(average+'') ).estimateGas()
+    return await promiseForGas
+} 
 
 // -------------------------------------- timestamp --------------------------------------
 
@@ -50,9 +50,6 @@ function minutesToTimeout(timestamp){
     const currentTimestamp = Math.floor(Date.now() / 1000);
     return MINUTES_TO_WAIT - Math.floor((currentTimestamp - timestamp)/60)
 }
-
-// -------------------------------------- end timestamp --------------------------------------
-
 
 // -------------------------------------- price --------------------------------------
 
@@ -94,12 +91,9 @@ function getPriceFromContract(){
     })
 }
 
-// -------------------------------------- end price --------------------------------------
-
 // -------------------------------------- module exports --------------------------------------
 module.exports.isTimestampPassed = isTimestampPassed
 module.exports.isPriceChanged2Percent = isPriceChanged2Percent
 module.exports.getPriceFromContract = getPriceFromContract
-
 module.exports.getTransactionDetails = getTransactionDetails
 
